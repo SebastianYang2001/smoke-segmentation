@@ -9,7 +9,7 @@ from tensorflow.keras.applications import ResNet50
 
 AUTOTUNE = tf.data.AUTOTUNE
 SEED = 123
-image_shape = (1500, 2500, 3)
+image_shape = (1500, 2500, 5)
 
 ### Data processing
 
@@ -122,7 +122,7 @@ def Unet_encoder(input, num_filters=16, dropout=0.1, batch_norm=True):
 
     out = tf.keras.layers.GlobalMaxPooling2D('channels_last')(c5)
     # output
-    # output = tf.keras.layers.Conv2D(3, (1, 1), activation='softmax')(c5)
+    # output = tf.keras.layers.Conv2D(4, (1, 1), activation='softmax')(c5)
     model = tf.keras.Model(inputs=[input], outputs=[out])
     return model
 
@@ -135,8 +135,8 @@ def unet_mod(encoder, skip_layers, inputs, num_filters=16, kernel=3, dropout=0.1
     d3 = DecoderBlock(d2, skip_layers[1], num_filters*2, kernel, batch_norm, dropout)                     ## (256 x 256)
     d4 = DecoderBlock(d3, skip_layers[0], num_filters*1, kernel, batch_norm, dropout)                      ## (512 x 512)
     
-    # output layer - 3 classes 
-    output = tf.keras.layers.Conv2D(3, (1, 1), activation='softmax')(d4)
+    # output layer - 4 classes 
+    output = tf.keras.layers.Conv2D(4, (1, 1), activation='softmax')(d4)
     model = tf.keras.Model(inputs=[inputs], outputs=[output])
     return model
 
