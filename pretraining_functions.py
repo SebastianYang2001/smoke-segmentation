@@ -9,7 +9,7 @@ from tensorflow.keras.applications import ResNet50
 
 AUTOTUNE = tf.data.AUTOTUNE
 SEED = 123
-image_shape = (1500, 2500, 5)
+image_shape = (1500, 2500, 3)
 
 ### Data processing
 
@@ -219,7 +219,10 @@ def random_resize_crop(image, scale=[0.75, 1.0], crop_size=128):
         dtype=tf.float32,
     )
     size = tf.cast(size, tf.int32)[0]
-    crop = tf.image.random_crop(image, (size, size, 3))
+    # ✅ 改成按输入的通道数来
+    channels = tf.shape(image)[-1]
+    crop = tf.image.random_crop(image, (size, size, channels))
+
     crop_resize = tf.image.resize(crop, (crop_size, crop_size))
     return crop_resize
 
